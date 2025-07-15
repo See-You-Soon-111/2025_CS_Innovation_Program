@@ -2,7 +2,7 @@
 
 ​		数字水印技术(Digital Watermarking)是通过一定的算法将一些标志性信息直接嵌入到多媒体内容当中，但不影响原来内容的价值和使用，并且不能被人的感知系统察觉或者注意到，只有通过专门的检测器或者阅读器才能提取。
 
-​		本项目基于开源库(https://github.com/guofei9987/blind_watermark)实现图片的盲水印嵌入与提取，并对该图片水印的鲁棒性进行测试。
+​		本项目基于开源库[blind_watermark](https://github.com/guofei9987/blind_watermark)，实现图片的盲水印嵌入与提取，并对该图片水印的鲁棒性进行测试。
 
 ## 1 嵌入水印
 
