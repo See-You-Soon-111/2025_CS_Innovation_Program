@@ -182,7 +182,7 @@ void SM4_T_table_1R(int index, uint32_t* A, uint32_t* rk, bool is_enc, uint32_t 
 
 ​		找到同构映射后，在SM4进入S盒前，将SM4的S盒输入值映射到AES的数域，然后通过_mm_aesenclast_si128()完成S盒的操作得到输出，再将输出逆映射回SM4的数域即可。
 
-![image-20250715195756301](../../../AppData/Roaming/Typora/typora-user-images/image-20250715195756301.png)
+<img src="image/SM4_TO_AES.png" alt="image-20250715220200390" style="zoom:70%;" />
 
 ​		这里注意，SM4和AES的存储方式不同（分别为小端序和大端序），因此在进行映射前先转换存储方式。且为了消除AES最后一轮行移位与异或密钥的影响，这里使用逆行移位与异或0密钥来处理。具体实现如下(其中矩阵乘法采用了查找表的方式实现，具体[参考](https://www.cnblogs.com/kentle/p/15826075.html))：
 
