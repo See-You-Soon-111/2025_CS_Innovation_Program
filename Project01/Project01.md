@@ -1,8 +1,6 @@
 
 # <center> Project01——SM4的软件实现与优化<center>
 
-**建议看pdf，markdown上的公式在github上不能正常显示**
-
 ## 1 实验环境
 
 |    编译器    |               **Visual Studio 2022**                |
