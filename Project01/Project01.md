@@ -13,10 +13,10 @@
 
 ​		SM4算法采用非平衡Feistel结构，分组长度为128-bit，密钥长度为128-bit，迭代轮数为32轮。本节我们将简述SM4加密算法，重点是展示代码实现。
 
-​		1、输入的128-bit明文$$m$$，按32-bit划分记为$$(X_0^0,X_0^1,X_0^2,X_0^3)$$。
+​		1、输入的128-bit明文$`m`$，按32-bit划分记为$`(X_0^0,X_0^1,X_0^2,X_0^3)`$。
 
-​		2、进行32轮迭代，每一轮有一个32-bit的轮密钥$$K_{i-1}$$参与运算（$$i=1,2,\cdots,32$$）：
-$$
+​		2、进行32轮迭代，每一轮有一个32-bit的轮密钥$`K_{i-1}`$参与运算（$`i=1,2,\cdots,32`$）：
+```math
 \begin{align}
 X_i^0&=X_{i-1}^1\\
 
@@ -26,20 +26,20 @@ X_i^0&=X_{i-1}^1\\
 
  X_i^3&=X_{i-1}^0\oplus T(X_{i-1}^1\oplus X_{i-1}^2\oplus X_{i-1}^3\oplus K_{i-1})
  \end{align}
-$$
-​		其中，函数$$T:\mathbb{F}_2^{32}\rightarrow\mathbb{F}_2^{32}$$，由非线性变换$$S$$和线性变换$$L$$复合而成。
+```
+​		其中，函数$`T:\mathbb{F}_2^{32}\rightarrow\mathbb{F}_2^{32}`$，由非线性变换$`S`$和线性变换$`L`$复合而成。
 
-​		设函数$$T$$的32-bit输入为$$\mathcal{A}=\{a_0,a_1,a_2,a_3\}\in(\mathbb{F}_{2^8})^4$$，则：
+​		设函数$`T`$的32-bit输入为$`\mathcal{A}=\{a_0,a_1,a_2,a_3\}\in(\mathbb{F}_{2^8})^4`$，则：
 
-- 非线性变换$$S$$：对每个字节单独进行查表代替操作（高4位为行标，低4位为列标），即：
+- 非线性变换$`S`$：对每个字节单独进行查表代替操作（高4位为行标，低4位为列标），即：
 
-$$
+$`
 \mathcal{B}=(S(a_0),S(a_1),S(a_2),S(a_3))
-$$
+`$
 
-- 线性变换$$L$$：对非线性变换$$S$$的32-bit输出$$\mathcal{B}$$，计算（<<<为循环左移）：
+- 线性变换$`L`$：对非线性变换$`S`$的32-bit输出$`\mathcal{B}`$，计算（<<<为循环左移）：
 
-$$L(\mathcal{B})=\mathcal{B\oplus(B<<<2)\oplus (B<<<10)\oplus （B<<<18）\oplus (B<<<24)}$$
+$`L(\mathcal{B})=\mathcal{B\oplus(B<<<2)\oplus (B<<<10)\oplus （B<<<18）\oplus (B<<<24)}`$
 
 ​		主要实现如下：
 
@@ -86,10 +86,10 @@ void SM4(uint8_t* input, uint8_t* output, uint32_t* rk, bool is_enc) {
 
 ### 2.2 轮密钥生成
 
-​		SM4算法的主密钥$$k$$为128-bit，轮密钥生成方案采用非平衡Feistel结构。本小节我们将简述其轮密钥生成方案，重点展示代码的实现。
+​		SM4算法的主密钥$`k`$为128-bit，轮密钥生成方案采用非平衡Feistel结构。本小节我们将简述其轮密钥生成方案，重点展示代码的实现。
 
-​		 1、将$$k$$按32-bit进行划分，记为$$(MK_0,MK_1,MK_2,MK_3)$$。然后，分别与32-bit的系统参数$$FK_0,FK_1,FK_2,FK_3$$进行异或。记为：
-$$
+​		 1、将$`k`$按32-bit进行划分，记为$`(MK_0,MK_1,MK_2,MK_3)`$。然后，分别与32-bit的系统参数$`FK_0,FK_1,FK_2,FK_3`$进行异或。记为：
+```math
 \begin{align}
  K_{-4}&=MK_0\oplus FK_0\\
 
@@ -99,15 +99,15 @@ $$
 
  K_{-1}&=MK_3\oplus FK_3
 \end{align}
-$$
-​		2、生成轮密钥$$K_i(i=0,1,\cdots,31)$$：
-$$
+```
+​		2、生成轮密钥$`K_i(i=0,1,\cdots,31)`$：
+$`
 K_i=K_{i-4}\oplus T'(K_{i-3}\oplus K_{i-2}\oplus K_{i-1}\oplus CK_i)
-$$
-​		其中函数$$T'$$只需将加密算法中的函数$$T$$中的线性变换$$L$$替换为：
-$$
+`$
+​		其中函数$`T'`$只需将加密算法中的函数$`T`$中的线性变换$`L`$替换为：
+$`
 L'(\mathcal{B})=\mathcal{B\oplus (B<<<13)\oplus(B<<<23)}
-$$
+`$
 ​		主要代码实现：
 
 ```C++
@@ -147,21 +147,21 @@ void SM4_KEY_GEN(uint8_t* key, uint32_t* rk) {
 
 ### 3.1 SM4 T-table优化
 
-​		S盒操作为$$x_0,x_1,x_2,x_3\rightarrow S(x_0),S(x_1),S(x_2),S(x)_3$$，其中$x_0,x_1,x_2,x_3$为8bit。为了提高效率，可以将S盒与后续的线性变换$$L$$合并，得到：
-$$
+​		S盒操作为$`x_0,x_1,x_2,x_3\rightarrow S(x_0),S(x_1),S(x_2),S(x)_3`$，其中$`x_0,x_1,x_2,x_3`$为8bit。为了提高效率，可以将S盒与后续的线性变换$`L`$合并，得到：
+```math
 L(S(x_0),S(x_1),S(x_2),S(x_3))\\
 
 =L(S(x_0)<<24)\oplus L(S(x_1)<<16)\oplus L(S(x_2)<<8)\oplus L(S(x_3))
-$$
-​		定义4个8bit$\rightarrow$32bit查找表$T_i$：
-$$
+```
+​		定义4个8bit$`\rightarrow`$32bit查找表$`T_i`$：
+```math
 \begin{aligned}
 T_0(x)&=L(S(x_0)<<24)\\
 T_1(x)&=L(S(x_1)<<16)\\
 T_2(x)&=L(S(x_2)<<8)\\
 T_3(x)&=L(S(x_3))\\
 \end{aligned}
-$$
+```
 ​		SM4一轮加解密实现如下：
 
 ```C++
@@ -261,7 +261,7 @@ void SM4_AESNI(uint8_t* input, uint8_t* output, uint32_t* rk, bool is_enc) {
 
 ### 3.3 SM4 GFNI优化
 
-​		可以使用gf2p8affineqb指令直接计算$GF(2^8)$上的同构映射，比AESNI使用的指令数更少。这里映射矩阵与常数向量[参考](https://www.cnblogs.com/kentle/p/15826075.html)。具体实现如下：
+​		可以使用gf2p8affineqb指令直接计算$`GF(2^8)`$上的同构映射，比AESNI使用的指令数更少。这里映射矩阵与常数向量[参考](https://www.cnblogs.com/kentle/p/15826075.html)。具体实现如下：
 
 ```c++
 // SM4 S盒到AES S盒的仿射变换矩阵
@@ -353,7 +353,7 @@ uint8_t key[16] = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 
 
 ### 5.1  增加函数
 
-给定整数$s$和比特串$X$，其中$len(X)\geq s$。定义函数$inc_s=MSB_{len(X)-s}(X)||[int(LSB_s(X))+1\ (mod\ 2^s)]_s$。
+给定整数$`s`$和比特串$`X`$，其中$`len(X)\geq s`$。定义函数$`inc_s=MSB_{len(X)-s}(X)||[int(LSB_s(X))+1\ (mod\ 2^s)]_s`$。
 
 ### 5.2 GHASH函数
 
@@ -361,7 +361,7 @@ uint8_t key[16] = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 
 
 ![image-20250719155511518](image/GHASH.png)
 
-其中块的乘法是在有限域$GF(2^{128})$上的多项式乘法，其中不可约多项式为$x^{128}+x^7+x^2+x+1$。
+其中块的乘法是在有限域$`GF(2^{128})`$上的多项式乘法，其中不可约多项式为$`x^{128}+x^7+x^2+x+1`$。
 
 ### 5.3 GCTR函数
 
@@ -369,7 +369,6 @@ uint8_t key[16] = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 
 
 ![image-20250719155939872](image/GCTR.png)
 
-![image-20250719155958205](../../../AppData/Roaming/Typora/typora-user-images/image-20250719155958205.png)
 
 ### 5.4 GCM加密
 
@@ -381,7 +380,7 @@ uint8_t key[16] = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 
 
 ## 6 SM4-GCM优化
 
-这里优化思路一是优化SM4算法，直接采用上述的GFNI进行优化。二是在计算GHASH中优化有限域上多项式乘法，使用PCLMULQDQ指令集优化$GF(2^{128})$上的多项式乘法。
+这里优化思路一是优化SM4算法，直接采用上述的GFNI进行优化。二是在计算GHASH中优化有限域上多项式乘法，使用PCLMULQDQ指令集优化$`GF(2^{128})`$上的多项式乘法。
 
 ```C++
 // 在GF(2^128)域中乘法，使用约化多项式x^128 + x^7 + x^2 + x + 1
