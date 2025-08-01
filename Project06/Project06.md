@@ -162,7 +162,7 @@ def test_protocol():
 ```
 
 运行结果如下：
+<img width="342" height="139" alt="image" src="https://github.com/user-attachments/assets/86abdbe8-88af-462a-a735-8971db35ccd4" />
 
-![image-20250801175335476](C:/Users/86189/Desktop/%E5%88%9B%E6%96%B0%E5%88%9B%E4%B8%9A%E5%AE%9E%E8%B7%B5/project06/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png)
 
 可以看到协议正确运行。
