@@ -1,6 +1,6 @@
 # <center> Project03——使用circom实现poseidon2哈希算法的电路<center>
 
-本项目使用circom实现参数为$(n,t,d)=(256,3,5)$的poseidon2哈希算法的电路，并用Groth16算法生成证明。
+本项目使用circom实现参数为$`(n,t,d)=(256,3,5)`$的poseidon2哈希算法的电路，并用Groth16算法生成证明。
 
 ## 1 poseidon2置换的电路实现
 
@@ -26,7 +26,7 @@ template SBox() {
 
 * **Partial Rounds**
 
-$t=3$时的内矩阵和外矩阵可以相同，内矩阵的生成方式只需生成三个对角线元素，其余元素为1，该矩阵满足MDS矩阵即可。轮常数每一轮只使用一个，一共需要进行56轮Partial Rounds，因此需要56个轮常数。
+$`t=3`$时的内矩阵和外矩阵可以相同，内矩阵的生成方式只需生成三个对角线元素，其余元素为1，该矩阵满足MDS矩阵即可。轮常数每一轮只使用一个，一共需要进行56轮Partial Rounds，因此需要56个轮常数。
 
 ```
 template InternalRound(i) {
@@ -88,7 +88,7 @@ template ExternalRound(i) {
 
 * **参数说明**
 
-$t$：状态大小(该项目为3)
+$`t`$：状态大小(该项目为3)
 
 capacity：容量部分大小(1或2)
 
@@ -107,7 +107,7 @@ rate=t-capacity：速率部分大小(吸收阶段每次处理的元素数量)
 
 * **初始化**
 
-前$t-1$个元素为0，最后一个元素为$IV$：
+前$`t-1`$个元素为0，最后一个元素为$`IV`$：
 
 ```
   signal state [nblocks+nout][t   ];
@@ -145,7 +145,7 @@ rate=t-capacity：速率部分大小(吸收阶段每次处理的元素数量)
 
 * **挤压阶段**
 
-从最终状态中提取输出：首先输出状态的前$min(rate,output\_len)$个元素，如果还需要更多输出，重复应用poseidon2置换并提取前rate个元素：
+从最终状态中提取输出：首先输出状态的前$`min(rate,output\_len)`$个元素，如果还需要更多输出，重复应用poseidon2置换并提取前rate个元素：
 
 ```
   var q = min(rate, output_len);
@@ -240,5 +240,6 @@ snarkjs groth16 verify verification_key.json public.json proof.json
 ```
 
 可以发现验证通过：
+
 
 ![image-20250802210306402](C:/Users/86189/Desktop/%E5%88%9B%E6%96%B0%E5%88%9B%E4%B8%9A%E5%AE%9E%E8%B7%B5/project03/image/%E9%AA%8C%E8%AF%81%E7%BB%93%E6%9E%9C.png)
