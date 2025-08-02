@@ -6,7 +6,7 @@
 
 poseidon2的构造如下所示：
 
-![image-20250802201928284](C:/Users/86189/Desktop/%E5%88%9B%E6%96%B0%E5%88%9B%E4%B8%9A%E5%AE%9E%E8%B7%B5/project03/image/poseidon2.png)
+![image-20250802201928284](image/poseidon2.png)
 
 其主要分为三步：第一次Full Rounds、Partial Rounds和第二次Full Rounds。Full Rounds中每次循环需要对中间状态向量的所有元素依次完成Add Round Constant，S-Box和MixLayer操作，其中S-Box是一个五次方的模幂运算。Partial Rounds与Full Rounds计算流程基本一致，不同点在于Partial Rounds在S-Box阶段只需完成第一个元素的模幂运算。
 
@@ -177,7 +177,7 @@ circom poseidon2_hash.circom --r1cs --wasm --sym
 
 可以看到编译成功：
 
-![image-20250802205640068](C:/Users/86189/Desktop/%E5%88%9B%E6%96%B0%E5%88%9B%E4%B8%9A%E5%AE%9E%E8%B7%B5/project03/image/%E7%BC%96%E8%AF%91%E7%BB%93%E6%9E%9C.png)
+![image-20250802205640068](image/%E7%BC%96%E8%AF%91%E7%BB%93%E6%9E%9C.png)
 
 ## 4 使用Groth16生成证明
 
@@ -242,4 +242,5 @@ snarkjs groth16 verify verification_key.json public.json proof.json
 可以发现验证通过：
 
 
-![image-20250802210306402](C:/Users/86189/Desktop/%E5%88%9B%E6%96%B0%E5%88%9B%E4%B8%9A%E5%AE%9E%E8%B7%B5/project03/image/%E9%AA%8C%E8%AF%81%E7%BB%93%E6%9E%9C.png)
+![image-20250802210306402](image/%E9%AA%8C%E8%AF%81%E7%BB%93%E6%9E%9C.png)
+
